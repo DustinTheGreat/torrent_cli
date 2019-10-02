@@ -46,7 +46,7 @@ def get_parser():
 
 def command_line_runner():
     """
-    执行命令行操作
+    
     """
     parser = get_parser()
     args = vars(parser.parse_args())
@@ -60,11 +60,6 @@ def command_line_runner():
     else:
         magnets = run(kw=args["keyword"],
                       num=args["num"], sort_by=args["sort_by"])
-        if args["output"]:
-            _output(magnets, args["output"])
-        else:
-            _print(magnets, args["pretty_oneline"])
-
 
 def run(kw, num, sort_by):
 
@@ -92,46 +87,62 @@ def run(kw, num, sort_by):
 
         try:
             resp = requests.get(url, headers=HEADERS).text.encode("utf-8")
-            print('response here')
             try:
-                links = []
-                soup2 = BeautifulSoup(resp, "lxml")
-                for link in soup2.findAll('a', attrs={'href': re.compile("^magnet")}):
-                    links.append((link.get('href')))
-
-                table =soup2.find("table", id="searchResult")
-
-                if not table:
-                    print('no table')
-                    #table = soup.find_all('table')
-                    #print('count:', len(table))
-                    #print(response.text)
-                else:
-                    torrents = []  
-                    for row in table.find_all('tr'):
-                        
-                        for column in row.find_all('td'):
-                            text = ', '.join(x.strip() for x in column.text.split('\n') if x.strip()).strip()
-                            torrents.append((text))
-                    print(torrents[0:len(torrents):6])
-                    for x in range(len(torrents)):
-                        #print(torrents[x + 1])
-
-                        # x = rank
-                        #torrent[0] = name
-                        #torrent[1] = seeders
-                        #torrent[2] = leachers
-                        #torrent[3] = category
-
-                        print('\n')
-                        #print(links[x])
-                        print('\n')
-                    print(url)
-                              
+                parse_results(resp)      
             except:
                 print("Error when parsing")
         except Exception as e:
             print(e)
+
+
+def parse_results(respose):
+    links = []
+    torrents = []
+    torrent_list = [] 
+    soup2 = BeautifulSoup(respose, "lxml")
+    for link in soup2.findAll('a', attrs={'href': re.compile("^magnet")}):
+        links.append((link.get('href')))
+    
+    table = soup2.find("table", id="searchResult")
+
+    if not table:
+        print('no table')
+        #table = soup.find_all('table')
+        #print('count:', len(table))
+        #print(response.text)
+    else:
+        for row in table.find_all('tr'):
+            
+            for column in row.find_all('td'):
+                text = ', '.join(x.strip() for x in column.text.split('\n') if x.strip()).strip()
+                torrents.append(text.encode("ascii", "replace"))
+        holder = int(0)
+        for x in range(len(links)):
+            torrent_list.append(torrents[holder:holder+4])
+        for index in range(len(links)):
+            print(index)
+            print(torrent_list[x])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 '''    return sort_magnets(magnets, sort_by, num)
 
 def sort_magnets(magnets, sort_by, num):
