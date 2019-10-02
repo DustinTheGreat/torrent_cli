@@ -22,12 +22,14 @@ HEADERS = {
 
 VERSION = "VERSION 0.0.9"
 DOMAIN = "https://www.thepiratebay.org"
+ARCHIVE = "https://tpb.party"
 
-
+PROXIES = {
+    "http": 'http://59.127.55.215:36733', 
+    "https": 'http://59.127.55.215:36733'
+}
 def get_parser():
-    """
-    解析命令行参数
-    """
+  
     parser = argparse.ArgumentParser(description='Magnets-Getter CLI Tools.')
     parser.add_argument('keyword', metavar="KEYWORD", type=str, nargs="*",
                         help='magnet keyword.')
@@ -45,9 +47,7 @@ def get_parser():
 
 
 def command_line_runner():
-    """
-    
-    """
+   
     parser = get_parser()
     args = vars(parser.parse_args())
 
@@ -86,20 +86,30 @@ def run(kw, num, sort_by):
         url = DOMAIN + "/search/{kw}/{p}".format(kw=_kw, p=num)
 
         try:
-            resp = requests.get(url, headers=HEADERS).text.encode("utf-8")
+            resp = requests.get(url, headers=HEADERS, proxies = PROXIES).text.encode("utf-8")
             try:
+                print(url)
                 parse_results(resp)      
             except:
                 print("Error when parsing")
+                #search archive 
+                url2 = ARCHIVE + "/search/{kw}/{p}".format(kw=_kw, p=num)
+                print(url2)
+                resp2 = requests.get(url2, headers=HEADERS).text.encode("utf-8")
+                try:
+                    print(resp2)
+                    parse_results(resp2) 
+
+                except:
+                    print("error parsing results")
+
         except Exception as e:
             print(e)
-
-
-def parse_results(respose):
+def parse_results(response):
     links = []
     torrents = []
     torrent_list = [] 
-    soup2 = BeautifulSoup(respose, "lxml")
+    soup2 = BeautifulSoup(response, "lxml")
     for link in soup2.findAll('a', attrs={'href': re.compile("^magnet")}):
         links.append((link.get('href')))
     
@@ -107,6 +117,7 @@ def parse_results(respose):
 
     if not table:
         print('no table')
+        print(url)
         #table = soup.find_all('table')
         #print('count:', len(table))
         #print(response.text)
@@ -121,12 +132,24 @@ def parse_results(respose):
             torrent_list.append(torrents[holder:holder+4:1])
             holder +=4
         for index in range(len(links)):
-            print(torrent_list[index][1].decode("utf-8"))
+            print(torrent_list[index])
+            print(links[index])
+
+
+def parse_name(name):
 
 
 
 
 
+
+
+    return(name)
+
+
+
+def download_torrnet(torrnet):
+    pass
 
 
 
@@ -174,7 +197,6 @@ def sort_magnets(magnets, sort_by, num):
 
 def _print(magnets, is_show_magnet_only):
     """
-    在终端界面输出结果
 
     :param magnets: 磁力列表
     :param is_show_magnet_only: 单行输出
@@ -202,7 +224,6 @@ def _print(magnets, is_show_magnet_only):
 
 def _output(magnets, path):
     """
-    将数据保存到本地文件
 
     :param magnets: 磁力列表
     :param path: 文件路径，支持 csv 和 json 两种文件格式
@@ -210,7 +231,6 @@ def _output(magnets, path):
     if path:
         _, extension = os.path.splitext(path)
         if extension == ".csv":
-            # 不兼容 Python2
             with open(path, mode="w+", encoding="utf-8-sig", newline="") as fout:
                 fieldnames = (
                     "magnet",
