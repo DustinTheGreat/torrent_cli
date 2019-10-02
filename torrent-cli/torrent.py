@@ -118,10 +118,10 @@ def parse_results(respose):
                 torrents.append(text.encode("ascii", "replace"))
         holder = int(0)
         for x in range(len(links)):
-            torrent_list.append(torrents[holder:holder+4])
+            torrent_list.append(torrents[holder:holder+4:1])
+            holder +=4
         for index in range(len(links)):
-            print(index)
-            print(torrent_list[x])
+            print(torrent_list[index][1].decode("utf-8"))
 
 
 
