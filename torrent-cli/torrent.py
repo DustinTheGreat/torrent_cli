@@ -97,7 +97,6 @@ def run(kw, num, sort_by):
                 print(url2)
                 resp2 = requests.get(url2, headers=HEADERS).text.encode("utf-8")
                 try:
-                    print(resp2)
                     parse_results(resp2) 
 
                 except:
@@ -132,27 +131,33 @@ def parse_results(response):
             torrent_list.append(torrents[holder:holder+4:1])
             holder +=4
         for index in range(len(links)):
-            print(torrent_list[index])
-            print(links[index])
+            print(index)
+            parse_name(torrent_list[index])
+
+            #print(links[index])
 
 
 def parse_name(name):
+    for items in range(len(name)):
+        name[items] = name[items].decode("utf-8" ,"replace")
 
+    info = name[1].split(',')
+    print()
+    print("Name: {}".format(info[0]))
+    print("Uploaded: {}".format(info[1]))
+    print("Size: {}".format(info[2]))
+    print("Type:{}".format(name[0]))
+    print("S/L Ratio:{}{}{}".format(name[2], "/", name[3]))
 
-
-
-
-
-
-    return(name)
-
+    print("\n")
 
 
 def download_torrnet(torrnet):
     pass
 
 
-
+def sort_by():
+    pass
 
 
 
@@ -194,32 +199,6 @@ def sort_magnets(magnets, sort_by, num):
                           reverse=True)
     return _magnets[:num]
 
-
-def _print(magnets, is_show_magnet_only):
-    """
-
-    :param magnets: 磁力列表
-    :param is_show_magnet_only: 单行输出
-    """
-    if not magnets:
-        return
-    if is_show_magnet_only:
-        for row in magnets:
-            print(row["magnet"], row["magnet_size"], row["magnet_date"])
-    else:
-        for row in magnets:
-            try:
-                print("磁链:", row["magnet"])
-                print("名称:", row["magnet_name"])
-                print("大小:", row["magnet_size"])
-                print("日期:", row["magnet_date"])
-                print("热度:", row["magnet_rank"], "\n")
-            except:
-                print("磁链:", row["magnet"])
-                print("名称:", row["magnet_name"].encode('utf-8'))
-                print("大小:", row["magnet_size"])
-                print("日期:", row["magnet_date"])
-                print("热度:", row["magnet_rank"], "\n")
 
 
 def _output(magnets, path):
