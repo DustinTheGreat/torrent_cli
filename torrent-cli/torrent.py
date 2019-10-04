@@ -12,8 +12,7 @@ import codecs
 
 import requests
 from bs4 import BeautifulSoup, Comment
-
-
+from subprocess import call
 HEADERS = {
     'X-Requested-With': 'XMLHttpRequest',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 '
@@ -104,7 +103,19 @@ def run(kw, num, sort_by):
 
         except Exception as e:
             print(e)
+            url2 = ARCHIVE + "/search/{kw}/{p}".format(kw=_kw, p=num)
+            resp2 = requests.get(url2, headers=HEADERS).text.encode("utf-8")
+            try:
+                parse_results(resp2)
+                print('here')
+                download  = input("What one do you want to download?") 
+                print(download)
+                print(links[int(download)])
+                download_torrnet(links[int(download)])
+            except:
+                print("error parsing results")
 def parse_results(response):
+    global links
     links = []
     torrents = []
     torrent_list = [] 
@@ -153,17 +164,18 @@ def parse_name(name):
 
 
 def download_torrnet(torrnet):
-    pass
+    #start multiprocessing
+   # call(["transmission-cli", "-p", "57558", torrnet])
+    print("done")
+
 
 
 def sort_by():
     pass
 
 
-
-
-
-
+def main():
+    pass
 
 
 
