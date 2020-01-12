@@ -1,4 +1,4 @@
-# torrent_cli
+# Torrent_Cli
 A torrent search and downloader from the command line. Can been used to automatically 
 # Example:
   <code> torrent.py -shrek2 </code>
