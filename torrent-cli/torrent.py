@@ -85,7 +85,9 @@ def run(kw, num, sort_by):
         url = DOMAIN + "/search/{kw}/{p}".format(kw=_kw, p=num)
 
         try:
-            resp = requests.get(url, headers=HEADERS, proxies = PROXIES).text.encode("utf-8")
+            
+            resp = requests.get(url, headers=HEADERS).text.encode("utf-8")
+            
             try:
                 print(url)
                 parse_results(resp)      
@@ -145,8 +147,15 @@ def parse_results(response):
             print(index)
             parse_name(torrent_list[index])
 
-            #print(links[index])
+            print(links[index])
+        print(links[0])
+    f = links[0]
+    save_link(f)
 
+
+def save_link(magnet):
+    with open("links.txt", "w+") as file:
+        file.write(magnet)
 
 def parse_name(name):
     for items in range(len(name)):
@@ -166,7 +175,7 @@ def parse_name(name):
 def download_torrnet(torrnet):
     #start multiprocessing
    # call(["transmission-cli", "-p", "57558", torrnet])
-    print("done")
+    
 
 
 
@@ -177,70 +186,5 @@ def sort_by():
 def main():
     pass
 
-
-
-
-
-
-
-'''    return sort_magnets(magnets, sort_by, num)
-
-def sort_magnets(magnets, sort_by, num):
-    
-    if sort_by == 0:
-        _magnets = sorted(magnets,
-                          key=lambda x: x["magnet_date"],
-                          reverse=True)
-    # 按大小排序，统一单位为 kb
-    elif sort_by == 1:
-        for m in magnets:
-            unit = m["magnet_size"].split()
-            if unit[1] == "GB":
-                _size = float(unit[0]) * 1024 * 1024
-            elif unit[1] == "MB":
-                _size = float(unit[0]) * 1024
-            else:
-                _size = float(unit[0])
-            m["magnet_size_kb"] = _size
-        _magnets = sorted(magnets,
-                          key=lambda x: x["magnet_size_kb"],
-                          reverse=True)
-    else:
-        _magnets = sorted(magnets,
-                          key=lambda x: x["magnet_rank"],
-                          reverse=True)
-    return _magnets[:num]
-
-
-
-def _output(magnets, path):
-    """
-
-    :param magnets: 磁力列表
-    :param path: 文件路径，支持 csv 和 json 两种文件格式
-    """
-    if path:
-        _, extension = os.path.splitext(path)
-        if extension == ".csv":
-            with open(path, mode="w+", encoding="utf-8-sig", newline="") as fout:
-                fieldnames = (
-                    "magnet",
-                    "magnet_name",
-                    "magnet_size",
-                    "magnet_date",
-                    "magnet_rank"
-                )
-                f_csv = csv.DictWriter(fout, fieldnames, extrasaction="ignore")
-                f_csv.writeheader()
-                f_csv.writerows(magnets)
-            print("Save successfully!")
-        elif extension == ".json":
-            with codecs.open(path, mode="w+", encoding="utf-8") as f:
-                json.dump(magnets, f, indent=2)
-            print("Save successfully!")
-        else:
-            print("Failed to save the file!")
-
-'''
 if __name__ == "__main__":
     command_line_runner()
