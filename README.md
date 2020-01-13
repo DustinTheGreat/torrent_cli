@@ -1,7 +1,7 @@
 # Torrent_Cli
 A torrent search and downloader from the command line. Can been used to automatically 
 # Example:
-  <code> torrent.py -shrek2 </code>
+  <code> torrent.py -shrek </code>
 # usage:
  
  torrent.py [-h] [-n NUM] [-s SORT_BY] [-o OUTPUT] [-p] [-v]
