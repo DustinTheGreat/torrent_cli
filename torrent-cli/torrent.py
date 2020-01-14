@@ -9,6 +9,7 @@ import math
 import argparse
 import json
 import codecs
+import webbrowser
 
 import requests
 from bs4 import BeautifulSoup, Comment
@@ -64,7 +65,6 @@ def run(kw, num, sort_by):
 
     print("Crawling data for you.....")
     _kw = "%20".join(kw)
-    # 排序类型选择
     if sort_by == 0:
         sort_str = "ctime"
     elif sort_by == 1:
@@ -151,12 +151,18 @@ def parse_results(response):
         print(links[0])
     f = links[0]
     save_link(f)
+    open_mirror()
 
 
 def save_link(magnet):
     with open("links.txt", "w+") as file:
+        print("here")
         file.write(magnet)
 
+def open_mirror():
+    with open("links.txt", "r") as f:
+        test = f.read()
+        webbrowser.open_new(test)
 def parse_name(name):
     for items in range(len(name)):
         name[items] = name[items].decode("utf-8" ,"replace")
@@ -175,8 +181,7 @@ def parse_name(name):
 def download_torrnet(torrnet):
     #start multiprocessing
    # call(["transmission-cli", "-p", "57558", torrnet])
-    
-
+   pass
 
 
 def sort_by():
