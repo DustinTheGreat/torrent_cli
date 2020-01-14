@@ -3,13 +3,12 @@ A torrent search and downloader from the command line. Can been used to automati
 # Example:
   <code> torrent.py shrek2 </code>
 # usage:
- 
+<code> 
  torrent.py [-h] [-n NUM] [-s SORT_BY] [-o OUTPUT] [-p] [-v]
          [KEYWORD [KEYWORD ...]]
+</code>
 
-Magnets-Getter CLI Tools.
-
-positional arguments:
+# positional arguments:
   KEYWORD               magnet keyword.
 
 optional arguments:
@@ -22,5 +21,6 @@ optional arguments:
                         output file path, supports csv and json format.
   -p, --pretty-oneline  show magnets info with one line.
   -v, --version         version information
+  
 # Help
   Want to implement threading into the torrent download.
