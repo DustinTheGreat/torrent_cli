@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import division
-
 import os
 import re
 import csv
@@ -10,10 +9,10 @@ import argparse
 import json
 import codecs
 import webbrowser
-
 import requests
 from bs4 import BeautifulSoup, Comment
 from subprocess import call
+
 HEADERS = {
     'X-Requested-With': 'XMLHttpRequest',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 '
@@ -28,6 +27,8 @@ PROXIES = {
     "http": 'http://59.127.55.215:36733', 
     "https": 'http://59.127.55.215:36733'
 }
+
+
 def get_parser():
   
     parser = argparse.ArgumentParser(description='Magnets-Getter CLI Tools.')
@@ -43,6 +44,8 @@ def get_parser():
                         help='show magnets info with one line.' , default= 0)
     parser.add_argument('-v', '--version', action='store_true',
                         help='version information.')
+    parser.add_argument('-d', '--link', type=int,
+                        help='Specify what link you want to download.')
     return parser
 
 
@@ -59,10 +62,11 @@ def command_line_runner():
         parser.print_help()
     else:
         magnets = run(kw=args["keyword"],
-                      num=args["num"], sort_by=args["sort_by"])
+                      num=args["num"], sort_by=args["sort_by"], download=args["link"])
 
-def run(kw, num, sort_by):
-
+def run(kw, num, sort_by, download):
+    global download_link
+    download_link = download
     print("Crawling data for you.....")
     _kw = "%20".join(kw)
     if sort_by == 0:
@@ -116,6 +120,7 @@ def run(kw, num, sort_by):
                 download_torrnet(links[int(download)])
             except:
                 print("error parsing results")
+
 def parse_results(response):
     global links
     links = []
@@ -149,20 +154,23 @@ def parse_results(response):
 
             print(links[index])
         print(links[0])
-    f = links[0]
-    save_link(f)
-    open_mirror()
+    if download_link != None:
+        f = links[download_link]
+        save_link(f)
+        open_mirror()
+##mstopped here###############################################################
+
 
 
 def save_link(magnet):
     with open("links.txt", "w+") as file:
-        print("here")
         file.write(magnet)
 
 def open_mirror():
     with open("links.txt", "r") as f:
         test = f.read()
         webbrowser.open_new(test)
+
 def parse_name(name):
     for items in range(len(name)):
         name[items] = name[items].decode("utf-8" ,"replace")
@@ -174,22 +182,7 @@ def parse_name(name):
     print("Size: {}".format(info[2]))
     print("Type:{}".format(name[0]))
     print("S/L Ratio:{}{}{}".format(name[2], "/", name[3]))
-
     print("\n")
-
-
-def download_torrnet(torrnet):
-    #start multiprocessing
-   # call(["transmission-cli", "-p", "57558", torrnet])
-   pass
-
-
-def sort_by():
-    pass
-
-
-def main():
-    pass
 
 if __name__ == "__main__":
     command_line_runner()
