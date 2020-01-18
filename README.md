@@ -4,7 +4,7 @@ I plan on serving this on AWS and use SMS to interface with it.
 # Example:
   ## list torrent:
   <code> ./torrent.py shrek2 </code>
-  ## download specific torren:
+  ## download specific torrent:
    <code>./torrent.py shrek2 -d 0 </code>.
 # usage:
 <code> 
