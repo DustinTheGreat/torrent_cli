@@ -2,7 +2,10 @@
 A torrent search and downloader from the command line. Can been used to automatically download torrents.
 I plan on serving this on AWS and use SMS to interface with it.
 # Example:
-  <code> torrent.py shrek2 </code>
+  ## list torrent:
+  <code> ./torrent.py shrek2 </code>
+  ## download specific torren:
+   <code>./torrent.py shrek2 -d 0 </code>.
 # usage:
 <code> 
  torrent.py [-h] [-n NUM] [-s SORT_BY] [-o OUTPUT] [-p] [-v]
