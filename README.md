@@ -1,6 +1,6 @@
 # Torrent_Cli
 A torrent search and downloader from the command line. Can been used to automatically download torrents.
-I plan on serving this on AWS and use SMS to interface with it.
+
 # Example:
   ## list torrent:
   <code> ./torrent.py shrek2 </code>
